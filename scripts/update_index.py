@@ -73,7 +73,7 @@ def main() -> None:
     readme = ROOT / "README.md"
     current = readme.read_text(encoding="utf-8")
     if current.count(START) != 1 or current.count(END) != 1:
-        raise ValueError("README.mdには日報索引の開始・終了マーカーが1つずつ必要です")
+        raise ValueError("README.mdには在庫記録の索引の開始・終了マーカーが1つずつ必要です")
     before, rest = current.split(START, 1)
     _, after = rest.split(END, 1)
     now_year = datetime.now(ZoneInfo("Asia/Tokyo")).year

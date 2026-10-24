@@ -1,4 +1,4 @@
-name: 在庫日報の索引を更新
+name: 在庫記録の索引を更新
 
 on:
   push:
@@ -35,5 +35,5 @@ jobs:
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git commit -m '在庫日報の索引を更新'
+          git commit -m '在庫記録の索引を更新'
           git push origin main
