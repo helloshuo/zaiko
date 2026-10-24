@@ -35,7 +35,7 @@ def daily_files(year_dir: Path) -> list[tuple[str, str]]:
 
 def links(records: list[tuple[str, str]]) -> str:
     if not records:
-        return "暂无日报。"
+        return "暂无记录。"
     return "\n".join(f"- [{day}]({path})" for day, path in records)
 
 
@@ -45,7 +45,7 @@ def index_text(now_year: int) -> str:
         for path in ROOT.iterdir()
         if path.is_dir() and YEAR_NAME.fullmatch(path.name)
     }
-    lines = [f"## {now_year} 年 · 当年日报", "", links(years.get(now_year, []))]
+    lines = [f"## {now_year} 年", "", links(years.get(now_year, []))]
 
     future_years = sorted((y for y in years if y > now_year), reverse=True)
     if future_years:
@@ -55,11 +55,11 @@ def index_text(now_year: int) -> str:
 
     older_years = sorted((y for y in years if y < now_year), reverse=True)
     if older_years:
-        lines.extend(["", "## 往年归档", ""])
+        lines.extend(["", "## 历史记录", ""])
         for year in older_years:
             lines.extend([
                 "<details>",
-                f"<summary>{year} 年（{len(years[year])} 天，点击展开）</summary>",
+                f"<summary>{year} 年</summary>",
                 "",
                 links(years[year]),
                 "",
