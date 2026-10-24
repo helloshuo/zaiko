@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Refresh the dated Markdown links on the repository homepage."""
+"""リポジトリのトップページにある日付別リンクを更新する。"""
 
 from datetime import datetime
 from pathlib import Path
@@ -35,7 +35,7 @@ def daily_files(year_dir: Path) -> list[tuple[str, str]]:
 
 def links(records: list[tuple[str, str]]) -> str:
     if not records:
-        return "暂无记录。"
+        return "記録はまだありません。"
     return "\n".join(f"- [{day}]({path})" for day, path in records)
 
 
@@ -45,21 +45,21 @@ def index_text(now_year: int) -> str:
         for path in ROOT.iterdir()
         if path.is_dir() and YEAR_NAME.fullmatch(path.name)
     }
-    lines = [f"## {now_year} 年", "", links(years.get(now_year, []))]
+    lines = [f"## {now_year}年", "", links(years.get(now_year, []))]
 
     future_years = sorted((y for y in years if y > now_year), reverse=True)
     if future_years:
-        lines.extend(["", "## 以后年份", ""])
+        lines.extend(["", "## 翌年以降", ""])
         for year in future_years:
-            lines.extend([f"### {year} 年", "", links(years[year]), ""])
+            lines.extend([f"### {year}年", "", links(years[year]), ""])
 
     older_years = sorted((y for y in years if y < now_year), reverse=True)
     if older_years:
-        lines.extend(["", "## 历史记录", ""])
+        lines.extend(["", "## 過去の記録", ""])
         for year in older_years:
             lines.extend([
                 "<details>",
-                f"<summary>{year} 年</summary>",
+                f"<summary>{year}年</summary>",
                 "",
                 links(years[year]),
                 "",
@@ -73,16 +73,16 @@ def main() -> None:
     readme = ROOT / "README.md"
     current = readme.read_text(encoding="utf-8")
     if current.count(START) != 1 or current.count(END) != 1:
-        raise ValueError("README.md 必须各有一个日报索引起止标记")
+        raise ValueError("README.mdには日報索引の開始・終了マーカーが1つずつ必要です")
     before, rest = current.split(START, 1)
     _, after = rest.split(END, 1)
     now_year = datetime.now(ZoneInfo("Asia/Tokyo")).year
     updated = before + START + "\n" + index_text(now_year) + END + after
     if updated != current:
         readme.write_text(updated, encoding="utf-8")
-        print("Updated README.md")
+        print("README.mdを更新しました")
     else:
-        print("README.md is current")
+        print("README.mdは最新です")
 
 
 if __name__ == "__main__":

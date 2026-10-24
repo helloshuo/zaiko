@@ -1,4 +1,4 @@
-name: Update daily inventory index
+name: 在庫日報の索引を更新
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
       - '[0-9][0-9][0-9][0-9]/*.md'
   workflow_dispatch:
   schedule:
-    - cron: '5 15 * * *' # 00:05 Japan time; also switches the visible current year.
+    - cron: '5 15 * * *' # 日本時間の午前0時5分。当年の表示も切り替える。
 
 permissions:
   contents: write
@@ -24,16 +24,16 @@ jobs:
         with:
           ref: main
           persist-credentials: true
-      - name: Refresh and publish index
+      - name: 索引を更新して公開
         run: |
           git pull --ff-only origin main
           python3 scripts/update_index.py
           git add README.md
           if git diff --cached --quiet; then
-            echo 'Index is already current.'
+            echo '索引は最新です。'
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git commit -m 'Update daily inventory index'
+          git commit -m '在庫日報の索引を更新'
           git push origin main
